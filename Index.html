@@ -1,0 +1,253 @@
+<html>
+
+<title>
+	Create Invitation
+</title>
+
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css"
+		integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+
+	<style>
+		.invalid {
+			color: red;
+			font-weight: bold;
+		}
+
+		.valid {
+			color: green;
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div style="width: 400px;margin: auto;padding-top: 50px;">
+
+		<h3>Create Invitation</h3>
+
+		<form class="pure-form pure-form-aligned" id="registraton" onsubmit="return verifyInvitation()">
+			<fieldset>
+				<div class="pure-control-group">
+					<label for="username">Username</label>
+					<input id="username" type="text">
+				</div>
+
+				<div class="pure-control-group">
+					<label for="password">Password</label>
+					<input id="password" type="password">
+				</div>
+
+				<div class="pure-control-group">
+					<label for="passwordReenter">Re-enter Password</label>
+					<input id="passwordReenter" type="password">
+				</div>
+
+				<hr style="width: 200px;">
+
+				<div class="pure-control-group">
+					<label for="eventType">Event Type</label>
+					<select id="eventType">
+						<option></option>
+						<option>Birthday</option>
+						<option>Picnic</option>
+						<option>Other</option>
+					</select>
+				</div>
+
+				<div class="pure-control-group">
+					<label for="eventTypeOther">'Other' Event Type</label>
+					<input id="eventTypeOther" placeholder="Event Type When 'Other'" type="text">
+				</div>
+
+				<div class="pure-control-group">
+					<label for="dateStart">Event Start Date</label>
+					<input id="dateStart" placeholder="mm/dd/yyyy" type="text">
+				</div>
+
+				<div class="pure-control-group">
+					<label for="dateEnd">Event End Date</label>
+					<input id="dateEnd" placeholder="mm/dd/yyyy" type="text">
+				</div>
+
+				<div class="pure-control-group">
+					<label for="startTime">Event Start Time</label>
+					<div id="startTime" style="float:right;">
+						<input id="timeAm" type="radio" name="startTimeRadios" value="am" checked>A.M.</label>
+						<input id="timePm" type="radio" name="startTimeRadios" value="pm">P.M.</label>
+					</div>
+				</div>
+
+				<button type="submit" class="pure-button pure-button-primary" style="float:right;">Create
+					Invitation</button>
+
+				</br>
+
+				<div style="float:left;">
+					Form Input Is: <div id="status" style="float:right;"></div>
+				</div>
+
+			</fieldset>
+		</form>
+
+	</div>
+
+	<hr style="width:80%">
+
+	<div style="padding: 10px">
+
+
+		<h3>Business Rules</h3>
+		<ul>
+			<li>Username Field
+				<ul>
+					<li>Field is required.</li>
+					<li>Value must be 5 characters or longer.</li>
+					<li>Value must start with the letter 'P'.</li>
+				</ul>
+			<li>Password Field
+				<ul>
+					<li>Field is required.</li>
+					<li>Value must be 7 characters or longer.</li>
+					<li>Value must contain both a letter and a number.</li>
+				</ul>
+			<li>Re-Enter Password Field
+				<ul>
+					<li>Field is required.</li>
+					<li>The 'Re-enter Password' field must have a value that is identical to the value in the 'Password'
+						field.</li>
+				</ul>
+			<li> Event Type Fields
+				<ul>
+					<li>The Event Type Field is always required. The 'Other Event Type' field is conditionally required.
+					</li>
+					<li>If the field 'Event Type' has a value of 'Other', then the field 'Other Event Type' must have a
+						value.</li>
+					<li>If the field 'Event Type' does not have a value of 'Other', then the 'Other Event Type' should
+						not have a value.</li>
+				</ul>
+			</li>
+			<li> Event Start Time
+				<ul>
+					<li>Field is required.</li>
+				</ul>
+			</li>
+			<li>Event Date Fields
+				<ul>
+					<li>Both dates are required.</li>
+					<li>'Event End Date' must be on or after 'Event Start Date'.</li>
+				</ul>
+			</li>
+		</ul>
+
+	</div>
+
+	<script>
+		// This is not an accurate way in which to get a date, but it is 
+		// sufficient for the purpose of this example.
+		function getDate(date) {
+			return Date.parse(date);
+		}
+
+		function getElement(id) {
+			return document.getElementById(id);
+		}
+
+		function hasNumber(value) {
+			return /\d/.test(value);
+		}
+
+		function dataIsValid() {
+			// Username must have a value.
+			if (getElement("username").value === "") {
+				return 0;
+			}
+
+			// Username must be 5 characters or longer.
+			if (getElement("username").value.length < 5) {
+				return 0;
+			}
+
+			// Username must start with the letter "P" (case does not matter).
+			if (getElement("username").value.substring(0, 1).toUpperCase() != "P") {
+				return 0;
+			}
+
+			// Password must have a value.
+			if (getElement("password").value === "") {
+				return 0;
+			}
+
+			// Password must contain a number.
+			if (!hasNumber(getElement("password").value)) {
+				return 0;
+			}
+
+			// Password must be 7 characters or longer.
+			if (getElement("password").value.length < 7) {
+				return 0;
+			}
+
+			// Password and Re-enter Password must have the same value.
+			if (getElement("password").value != getElement("passwordReenter").value) {
+				return 0;
+			}
+
+			// Event Type must have a value.
+			var eventType = getElement("eventType");
+			if (eventType.options[eventType.selectedIndex].value === "") {
+				return 0;
+			}
+
+			// If the select Event Type is "Other", then Other Event Type must have a value.
+			if (eventType.options[eventType.selectedIndex].value === "Other" && getElement("eventTypeOther").value === "") {
+				return 0;
+			}
+
+			// Event Start Date must have a value.
+			if (getElement("dateStart").value === "") {
+				return 0;
+			}
+
+			// Ensure that Event Start Date is an actual date (ignore formatting);
+			if (!getDate(getElement("dateStart").value)) {
+				return 0;
+			}
+
+			// Event End Date must have a value.
+			if (getElement("dateEnd").value === "") {
+				return 0;
+			}
+
+			// Ensure that Event End Date is an actual date (ignore formatting);
+			if (!getDate(getElement("dateEnd").value)) {
+				return 0;
+			}
+		}
+
+		function verifyInvitation() {
+			// Clear the validatoin status.
+			getElement("status").innerHTML = "";
+
+			// Determine if the data is valid.
+			var isValid = dataIsValid();
+
+			// Display a message indicating whether the data is valid or invalid.
+			if (isValid === 0) {
+				getElement("status").innerHTML = "<div id='validityStatus' class='invalid'>INVALID</div>";
+			} else {
+				getElement("status").innerHTML = "<div id='validityStatus' class='valid'>VALID</div>";
+			}
+
+			// Always return false, as we don't want the page to refresh -- even in the event of valid data.
+			return false;
+		}
+
+		// Validate the data immediately to display "INVALID".
+		verifyInvitation();
+	</script>
+
+</body>
+
+</html>
